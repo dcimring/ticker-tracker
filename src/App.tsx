@@ -408,7 +408,7 @@ export default function App() {
                     className="w-full flex items-center gap-4 px-6 py-4 bg-secondary/10 text-secondary rounded-2xl font-black uppercase tracking-[0.2em] text-xs"
                   >
                     <LogOut className="w-5 h-5" />
-                    Terminate Session
+                    Logout
                   </button>
                 </div>
               </div>
