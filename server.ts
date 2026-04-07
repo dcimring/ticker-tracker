@@ -19,7 +19,7 @@ const db = getFirestore(admin.app(), firebaseConfig.firestoreDatabaseId);
 // Update system version on startup
 const updateSystemVersion = async () => {
   try {
-    const version = "v1.0.2-intelligence-boost";
+    const version = new Date().getTime().toString();
     await db.collection('system_meta').doc('version').set({ 
       version,
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
