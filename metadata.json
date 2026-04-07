@@ -1,0 +1,5 @@
+{
+  "name": "TickerTracker AI",
+  "description": "AI-powered stock and crypto watchlist that parses messy text and sends Discord alerts when price targets are reached.",
+  "requestFramePermissions": []
+}

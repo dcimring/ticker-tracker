@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  /* Obsidian Architect Palette */
+  --color-surface: #0b1326;
+  --color-surface-container-lowest: #050914;
+  --color-surface-container-low: #0f1a33;
+  --color-surface-container: #162544;
+  --color-surface-container-high: #1c2f57;
+  --color-surface-container-highest: #243b6d;
+  --color-surface-bright: #2d4a8a;
+  
+  --color-on-surface: #dae2fd;
+  --color-on-surface-variant: #94a3b8;
+  
+  --color-primary: #4edea3; /* Emerald */
+  --color-primary-container: #10b981;
+  --color-on-primary-container: #064e3b;
+  
+  --color-secondary: #f43f5e; /* Crimson */
+  --color-secondary-container: #9f1239;
+  --color-on-secondary-container: #4c0519;
+  
+  --color-outline-variant: rgba(218, 226, 253, 0.15); /* Ghost Border */
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-on-surface font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+
+  /* Tabular lining for numbers */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}

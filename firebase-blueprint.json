@@ -1,0 +1,42 @@
+{
+  "entities": {
+    "WatchlistItem": {
+      "title": "Watchlist Item",
+      "description": "A stock or crypto ticker being tracked.",
+      "type": "object",
+      "properties": {
+        "ticker": { "type": "string", "description": "The ticker symbol (e.g., AAPL, BTC/USD)." },
+        "assetType": { "type": "string", "enum": ["stock", "crypto"], "description": "The type of asset." },
+        "targetPrice": { "type": "number", "description": "The price level to trigger an alert." },
+        "takeProfitLevels": { "type": "array", "items": { "type": "number" }, "description": "The price levels at which to sell." },
+        "currentPrice": { "type": "number", "description": "The last known price." },
+        "reasoning": { "type": "string", "description": "The user's reasoning for this trade." },
+        "status": { "type": "string", "enum": ["active", "triggered", "archived"], "description": "The current status of the alert." },
+        "userId": { "type": "string", "description": "The ID of the user who owns this item." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the item was created." }
+      },
+      "required": ["ticker", "assetType", "targetPrice", "userId"]
+    },
+    "UserConfig": {
+      "title": "User Configuration",
+      "description": "User-specific settings for alerts.",
+      "type": "object",
+      "properties": {
+        "discordWebhookUrl": { "type": "string", "description": "The URL for Discord alerts." },
+        "alertThreshold": { "type": "number", "description": "The percentage threshold for proximity alerts (e.g., 0.02 for 2%)." },
+        "userId": { "type": "string", "description": "The ID of the user." }
+      },
+      "required": ["userId"]
+    }
+  },
+  "firestore": {
+    "/watchlist": {
+      "schema": "WatchlistItem",
+      "description": "Collection of all watchlist items."
+    },
+    "/userConfigs": {
+      "schema": "UserConfig",
+      "description": "Collection of user settings."
+    }
+  }
+}
