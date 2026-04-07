@@ -86,34 +86,36 @@ export default function MagicPaste({ onParsed, onClose }: MagicPasteProps) {
         Paste unstructured market data, analyst reports, or social sentiment. Our neural engine will distill tickers, asset classes, and target levels with obsidian precision.
       </p>
 
-      <div className="relative group">
-        <textarea
-          className="w-full h-48 p-8 bg-surface-container-highest border border-transparent rounded-[2rem] text-on-surface font-medium focus:bg-surface-bright/10 focus:border-primary/30 transition-all outline-none resize-none text-base leading-relaxed placeholder:text-on-surface-variant/30"
-          placeholder="Example: $AAPL looking strong at $180 support. If it breaks $185, target $200. $BTC consolidation near $65k..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-        
-        <button
-          onClick={handleParse}
-          disabled={isParsing || !text.trim()}
-          className={cn(
-            "absolute bottom-6 right-6 flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-[1.25rem] font-black uppercase tracking-widest text-[10px] transition-all hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed shadow-xl shadow-primary/10",
-            isParsing && "animate-pulse"
-          )}
-        >
-          {isParsing ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            <>
-              <Plus className="w-4 h-4" />
-              Extract Intelligence
-            </>
-          )}
-        </button>
+      <div className="flex flex-col gap-4">
+        <div className="relative group">
+          <textarea
+            className="w-full h-48 p-6 md:p-8 bg-surface-container-highest border border-transparent rounded-[2rem] text-on-surface font-medium focus:bg-surface-bright/10 focus:border-primary/30 transition-all outline-none resize-none text-base leading-relaxed placeholder:text-on-surface-variant/30"
+            placeholder="Example: $AAPL looking strong at $180 support. If it breaks $185, target $200. $BTC consolidation near $65k..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          
+          <button
+            onClick={handleParse}
+            disabled={isParsing || !text.trim()}
+            className={cn(
+              "md:absolute md:bottom-6 md:right-6 flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-[1.25rem] font-black uppercase tracking-widest text-[10px] transition-all hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed shadow-xl shadow-primary/10 w-full md:w-auto",
+              isParsing && "animate-pulse"
+            )}
+          >
+            {isParsing ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4" />
+                Extract Intelligence
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {error && (

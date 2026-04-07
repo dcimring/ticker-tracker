@@ -27,6 +27,7 @@ export default function App() {
   const [isMagicModalOpen, setIsMagicModalOpen] = useState(false);
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -158,33 +159,47 @@ export default function App() {
     }
   };
 
+  const handleLogoClick = () => {
+    setActiveTab('dashboard');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleConfirmTrades = async (trades: ParsedTrade[]) => {
     if (!user) return;
 
+    setIsAdding(true);
     const path = 'watchlist';
     try {
+      // 1. Fetch prices for the new tickers first
+      let prices: Record<string, number> = {};
+      try {
+        const response = await axios.post('/api/check', { 
+          items: trades,
+          config: userConfig 
+        });
+        if (response.data.success) {
+          prices = response.data.prices;
+        }
+      } catch (err) {
+        console.error("Initial price fetch failed:", err);
+        // Continue anyway, we'll just have no initial price
+      }
+
+      // 2. Add to Firestore with currentPrice if available
       for (const trade of trades) {
         await addDoc(collection(db, path), {
           ...trade,
           userId: user.uid,
           status: 'active',
+          currentPrice: prices[trade.ticker] || null,
           createdAt: Timestamp.now()
         });
       }
       setPendingTrades(null);
-      
-      // Trigger a price check immediately for the new items
-      const tickers = trades.map(t => t.ticker);
-      const response = await axios.post('/api/check', { tickers });
-      if (response.data.success) {
-        // Update local state or just let Firestore sync handle it if we were updating Firestore from server
-        // Since server doesn't have Firestore admin, we'll update from client
-        const prices = response.data.prices;
-        // This is a bit complex to update multiple docs from client without IDs, 
-        // but since we just added them, we'll wait for the next manual refresh or background check.
-      }
     } catch (err) {
       console.error("Add trades error:", err);
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -232,12 +247,15 @@ export default function App() {
 
       {/* Top Navigation Bar */}
       <nav className="fixed top-10 left-0 right-0 h-20 bg-surface-container-low/80 backdrop-blur-xl flex items-center px-6 lg:px-12 z-40 border-b border-outline-variant/10">
-        <div className="flex items-center gap-3 lg:gap-4 mr-4 lg:mr-12">
+        <button 
+          onClick={handleLogoClick}
+          className="flex items-center gap-3 lg:gap-4 mr-4 lg:mr-12 hover:opacity-80 transition-opacity"
+        >
           <div className="w-9 h-9 lg:w-10 h-10 bg-gradient-to-br from-primary to-primary-container rounded-xl flex items-center justify-center shadow-lg shadow-primary/10">
             <TrendingUp className="w-4 h-4 lg:w-5 h-5 text-on-primary-container" />
           </div>
           <span className="text-lg lg:text-xl font-black text-on-surface tracking-tighter uppercase">TickerTracker</span>
-        </div>
+        </button>
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-2 flex-1">
@@ -433,7 +451,7 @@ export default function App() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="bg-surface-container-low w-full max-w-4xl rounded-[3rem] shadow-2xl border border-outline-variant overflow-hidden"
             >
-              <div className="p-12">
+              <div className="p-6 md:p-12">
                 <MagicPaste 
                   onParsed={(trades) => {
                     setPendingTrades(trades);
@@ -452,6 +470,7 @@ export default function App() {
           trades={pendingTrades}
           onConfirm={handleConfirmTrades}
           onCancel={() => setPendingTrades(null)}
+          isAdding={isAdding}
         />
       )}
 

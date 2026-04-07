@@ -70,20 +70,20 @@ export default function Settings({ userId, onConfigUpdate }: SettingsProps) {
 
   return (
     <div className="max-w-3xl mx-auto space-y-12">
-      <div className="flex items-center gap-4 mb-12">
-        <div className="w-12 h-12 bg-surface-container-high rounded-2xl flex items-center justify-center">
+      <div className="flex flex-col md:flex-row md:items-center gap-4 mb-12">
+        <div className="w-12 h-12 bg-surface-container-high rounded-2xl flex items-center justify-center shrink-0">
           <Bell className="w-6 h-6 text-primary" />
         </div>
         <div>
-          <h1 className="text-4xl font-black text-on-surface tracking-tighter">Alert Configuration</h1>
+          <h1 className="text-3xl md:text-4xl font-black text-on-surface tracking-tighter">Alert Configuration</h1>
           <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em]">System-wide notification parameters</p>
         </div>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-10">
-        <div className="bg-surface-container-low rounded-[3rem] p-10 space-y-10 border border-outline-variant/10">
+      <form onSubmit={handleSave} className="space-y-6 md:space-y-10">
+        <div className="bg-surface-container-low rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 space-y-8 md:space-y-10 border border-outline-variant/10">
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.3em] ml-1">Discord Webhook Interface</label>
               {config.discordWebhookUrl && (
                 <button
@@ -155,33 +155,35 @@ export default function Settings({ userId, onConfigUpdate }: SettingsProps) {
           </div>
 
           <div className="pt-6 border-t border-outline-variant/10">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.3em] ml-1">Live Sync Engine</label>
                 <p className="text-[10px] text-on-surface-variant/60 font-medium uppercase tracking-widest ml-1 mt-1">Automatically refresh market data every 5 minutes while the app is open.</p>
               </div>
-              <button
-                type="button"
-                onClick={() => setConfig({ ...config, liveSyncEnabled: !config.liveSyncEnabled })}
-                className={cn(
-                  "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none",
-                  config.liveSyncEnabled ? "bg-primary" : "bg-surface-container-highest"
-                )}
-              >
-                <span
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setConfig({ ...config, liveSyncEnabled: !config.liveSyncEnabled })}
                   className={cn(
-                    "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
-                    config.liveSyncEnabled ? "translate-x-6" : "translate-x-1"
+                    "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none",
+                    config.liveSyncEnabled ? "bg-primary" : "bg-surface-container-highest"
                   )}
-                />
-              </button>
+                >
+                  <span
+                    className={cn(
+                      "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                      config.liveSyncEnabled ? "translate-x-6" : "translate-x-1"
+                    )}
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-between bg-surface-container-lowest p-8 rounded-[2.5rem] border border-outline-variant/10">
+        <div className="flex flex-col md:flex-row items-center justify-between bg-surface-container-lowest p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-outline-variant/10 gap-6">
           <div className="flex items-center gap-4 text-on-surface-variant">
-            <Shield className="w-6 h-6 text-primary/40" />
+            <Shield className="w-6 h-6 text-primary/40 shrink-0" />
             <p className="text-[10px] font-bold uppercase tracking-widest">Encrypted Storage • Firebase Enterprise</p>
           </div>
           
@@ -189,7 +191,7 @@ export default function Settings({ userId, onConfigUpdate }: SettingsProps) {
             type="submit"
             disabled={isSaving}
             className={cn(
-              "flex items-center justify-center gap-3 px-10 py-5 rounded-[1.25rem] font-black uppercase tracking-widest text-[10px] transition-all shadow-xl shadow-primary/10",
+              "w-full md:w-auto flex items-center justify-center gap-3 px-8 md:px-10 py-4 md:py-5 rounded-[1.25rem] font-black uppercase tracking-widest text-[10px] transition-all shadow-xl shadow-primary/10",
               saveStatus === 'success' 
                 ? "bg-primary text-on-primary-container shadow-primary/20" 
                 : "bg-gradient-to-br from-primary to-primary-container text-on-primary-container hover:opacity-90"
