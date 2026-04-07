@@ -14,6 +14,7 @@ import MagicPaste from './components/MagicPaste';
 import Watchlist from './components/Watchlist';
 import Settings from './components/Settings';
 import TradeConfirmation from './components/TradeConfirmation';
+import UpdateToast from './components/UpdateToast';
 import axios from 'axios';
 import { limit } from 'firebase/firestore';
 
@@ -29,6 +30,23 @@ export default function App() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
+  const [showUpdateToast, setShowUpdateToast] = useState(false);
+  const loadedVersion = React.useRef<string | null>(null);
+
+  useEffect(() => {
+    const docRef = doc(db, 'system_meta', 'version');
+    const unsubscribe = onSnapshot(docRef, (snap) => {
+      if (snap.exists()) {
+        const newVersion = snap.data().version;
+        if (!loadedVersion.current) {
+          loadedVersion.current = newVersion;
+        } else if (newVersion !== loadedVersion.current) {
+          setShowUpdateToast(true);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((u) => {
@@ -473,6 +491,11 @@ export default function App() {
           isAdding={isAdding}
         />
       )}
+
+      <UpdateToast 
+        show={showUpdateToast} 
+        onRefresh={() => window.location.reload()} 
+      />
 
       {/* Footer / Status */}
       <footer className="py-12 bg-surface-container-lowest">

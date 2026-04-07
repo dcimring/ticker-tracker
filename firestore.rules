@@ -22,6 +22,12 @@ service cloud.firestore {
       allow read: if true;
     }
 
+    // System Metadata rules
+    match /system_meta/{document} {
+      allow read: if true;
+      allow write: if false; // Only admin can write
+    }
+
     // Default deny
     match /{document=**} {
       allow read, write: if isSignedIn();

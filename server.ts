@@ -15,6 +15,22 @@ if (!admin.apps.length) {
 }
 
 const db = getFirestore(admin.app(), firebaseConfig.firestoreDatabaseId);
+
+// Update system version on startup
+const updateSystemVersion = async () => {
+  try {
+    const version = new Date().toISOString();
+    await db.collection('system_meta').doc('version').set({ 
+      version,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    console.log(`System version synchronized: ${version}`);
+  } catch (err) {
+    console.error("Failed to update system version:", err);
+  }
+};
+updateSystemVersion();
+
 const yahooFinance = new YahooFinance();
 
 const app = express();

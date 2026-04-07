@@ -27,6 +27,15 @@
         "userId": { "type": "string", "description": "The ID of the user." }
       },
       "required": ["userId"]
+    },
+    "SystemMeta": {
+      "title": "System Metadata",
+      "description": "Global system settings and versioning.",
+      "type": "object",
+      "properties": {
+        "version": { "type": "string", "description": "The current version or deployment timestamp of the application." }
+      },
+      "required": ["version"]
     }
   },
   "firestore": {
@@ -37,6 +46,10 @@
     "/userConfigs": {
       "schema": "UserConfig",
       "description": "Collection of user settings."
+    },
+    "/system_meta": {
+      "schema": "SystemMeta",
+      "description": "Global system metadata for versioning."
     }
   }
 }
